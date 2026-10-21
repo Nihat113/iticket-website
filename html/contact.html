@@ -1,17 +1,17 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ITicket.az</title>
+    <title>Contact Us | ITicket.az</title>
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
 
-    <!-- Shared site header -->
+    
     <header>
         <nav aria-label="Main navigation">
-            <h1>ITicket.az</h1>
+            <h1>🎟️ITicket.az</h1>
             <a href="index.html">Home</a>
             <a href="events.html">Events</a>
             <a href="about.html">About</a>
@@ -20,12 +20,78 @@
         </nav>
     </header>
 
-    <!-- Main Body -->
+    
     <main>
-        <!-- Your page content goes here -->
+        <section class="contact-page" aria-labelledby="contact-title">
+            <div class="contact-heading">
+                <p class="about-kicker"><span></span> We’re here to help</p>
+                <h2 id="contact-title">Let’s talk.</h2>
+                <p>Have a question, spotted a problem, or need help with a booking? Send us a message and we’ll be glad to hear from you.</p>
+            </div>
+
+            <div class="contact-layout">
+                <aside class="contact-details" aria-label="Contact information">
+                    <p class="contact-details-label">Get in touch</p>
+                    <h3>We’d love to hear from you.</h3>
+                    <p class="contact-details-intro">Choose the best way to reach our team. For booking questions, include your event name and any relevant details in your message.</p>
+                    <div class="contact-detail-item">
+                        <span class="contact-detail-icon" aria-hidden="true">@</span>
+                        <div><span>Email</span><a href="mailto:info@iticket.az">info@iticket.az</a></div>
+                    </div>
+                    <div class="contact-detail-item">
+                        <span class="contact-detail-icon" aria-hidden="true">&#9742;</span>
+                        <div><span>Phone</span><a href="tel:+994124242424">+994 12 424-24-24</a></div>
+                    </div>
+                    <div class="contact-detail-item">
+                        <span class="contact-detail-icon" aria-hidden="true">&#9678;</span>
+                        <div><span>Visit us</span><p>AF Mall, 14th floor, office 36<br>Samad Vurgun 34, Baku, Azerbaijan</p></div>
+                    </div>
+                    <div class="contact-hours"><span>Before you send</span><p>Please don’t include card details or passwords in your message.</p></div>
+                </aside>
+
+                <div class="contact-form-panel">
+                    <h3>Send a message</h3>
+                    <p class="contact-form-intro">Fill in the details below and your email app will open with the message ready to send.</p>
+                    <form id="contact-form">
+                        <div class="contact-name-fields">
+                            <div class="contact-field">
+                                <label for="first-name">First name <span aria-hidden="true">*</span></label>
+                                <input id="first-name" name="firstName" type="text" autocomplete="given-name" required>
+                            </div>
+                            <div class="contact-field">
+                                <label for="last-name">Surname <span aria-hidden="true">*</span></label>
+                                <input id="last-name" name="lastName" type="text" autocomplete="family-name" required>
+                            </div>
+                        </div>
+                        <div class="contact-field">
+                            <label for="email-address">Email address <span aria-hidden="true">*</span></label>
+                            <input id="email-address" name="email" type="email" autocomplete="email" required>
+                        </div>
+                        <div class="contact-field">
+                            <label for="problem-type">What can we help with? <span aria-hidden="true">*</span></label>
+                            <select id="problem-type" name="topic" required>
+                                <option value="" disabled selected>Select a topic</option>
+                                <option>Booking or ticket question</option>
+                                <option>Payment issue</option>
+                                <option>Event information</option>
+                                <option>Website problem</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                        <div class="contact-field">
+                            <label for="message">Your message <span aria-hidden="true">*</span></label>
+                            <textarea id="message" name="message" rows="5" placeholder="Tell us a little more so we can help…" required></textarea>
+                        </div>
+                        <button class="contact-submit" type="submit">Continue to email <span aria-hidden="true">&#8594;</span></button>
+                        <p class="contact-form-note">Your message is not sent automatically. Review it in your email app and press Send to contact us.</p>
+                        <p class="contact-form-status" id="contact-status" role="status" aria-live="polite"></p>
+                    </form>
+                </div>
+            </div>
+        </section>
     </main>
 
-    <!-- Footer -->
+    
         <footer class="site-footer">
         <div class="footer-brand">
             <h2>&#127903;&#65039; ITicket.az</h2>
@@ -57,5 +123,6 @@
         </div>
     </footer>
 
+    <script src="../Js/contact.js"></script>
 </body>
 </html>

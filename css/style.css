@@ -1,4 +1,4 @@
-﻿* {
+* {
     box-sizing: border-box;
 }
 body {
@@ -7,9 +7,7 @@ body {
     color: #f5f5f5;
     font-family: Arial, sans-serif;
 }
-/* =========================
-   HEADER AND NAVIGATION
-========================= */
+
 header {
     background-color: #111111;
     padding: 20px 40px;
@@ -50,12 +48,166 @@ header nav a:focus-visible {
     outline: 2px solid #fff;
     outline-offset: 3px;
 }
-/* =========================
-   RESPONSIVE HEADER
-========================= */
-/* =========================
-   HOME PAGE HERO
-========================= */
+
+.about-founder,
+.about-company {
+    width: min(1120px, calc(100% - 48px));
+    margin-right: auto;
+    margin-left: auto;
+}
+.about-kicker {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin: 0 0 16px;
+    color: #d5a3ab;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+}
+.about-kicker span { width: 22px; height: 1px; background: #b44a5d; }
+.about-bottom-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+}
+.about-founder { padding: 86px 0 78px; }
+.company-intro h2 {
+    margin: 0;
+    font-size: clamp(2rem, 4vw, 3rem);
+    letter-spacing: -0.04em;
+    line-height: 1.08;
+}
+.founder-card {
+    display: grid;
+    grid-template-columns: minmax(270px, 0.88fr) 1.12fr;
+    overflow: hidden;
+    border: 1px solid #302a2b;
+    border-radius: 12px;
+    background: #141313;
+}
+.founder-photo-wrap { position: relative; min-height: 390px; overflow: hidden; background: #21191a; }
+.founder-photo {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 390px;
+    object-fit: cover;
+    object-position: center 37%;
+    filter: saturate(0.83);
+}
+.founder-photo-caption {
+    position: absolute;
+    right: 16px;
+    bottom: 16px;
+    padding: 9px 12px;
+    border: 1px solid rgba(255,255,255,.18);
+    border-radius: 4px;
+    background: rgba(12, 11, 11, .76);
+    color: #f1e9ea;
+    font-size: 11px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+.founder-copy { align-self: center; padding: clamp(28px, 6vw, 64px); }
+.founder-overline {
+    margin: 0 0 12px;
+    color: #d5a3ab;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+}
+.founder-copy h2 { margin: 0 0 18px; font-size: clamp(1.8rem, 3.5vw, 2.7rem); letter-spacing: -.04em; line-height: 1.08; }
+.founder-copy p:not(.founder-overline) { color: #c4bfc0; font-size: 15px; line-height: 1.8; }
+.founder-copy .founder-signoff { margin-top: 24px; color: #ead9dc; font-family: Georgia, serif; font-size: 17px; font-style: italic; }
+.about-company {
+    margin-bottom: 72px;
+    padding: clamp(28px, 6vw, 62px);
+    border: 1px solid #3a292d;
+    border-radius: 12px;
+    background: linear-gradient(145deg, #1a1516, #121111 70%);
+}
+.company-intro { display: grid; grid-template-columns: 1fr 0.8fr; align-items: end; gap: 36px; padding-bottom: 38px; }
+.company-intro > p { max-width: 460px; margin: 0; color: #c4bfc0; font-size: 15px; line-height: 1.8; }
+.about-values { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid #3b3032; border-bottom: 1px solid #3b3032; }
+.about-value { padding: 24px 22px 26px 0; }
+.about-value + .about-value { padding-left: 22px; border-left: 1px solid #3b3032; }
+.value-number { color: #d58997; font-size: 11px; font-weight: 700; letter-spacing: .14em; }
+.about-value h3 { margin: 18px 0 8px; font-size: 17px; }
+.about-value p { margin: 0; color: #aaa3a4; font-size: 13px; line-height: 1.7; }
+.about-bottom-link { margin-top: 26px; color: #e7c7cc; }
+.about-bottom-link span { color: #d58997; font-size: 18px; transition: transform .2s ease; }
+.about-bottom-link:hover span { transform: translateX(4px); }
+@media (max-width: 700px) {
+    .about-founder, .about-company { width: min(100% - 28px, 540px); }
+    .about-founder { padding: 42px 0 56px; }
+    .founder-card { grid-template-columns: 1fr; }
+    .founder-photo-wrap, .founder-photo { min-height: 340px; height: 340px; }
+    .founder-photo { object-position: center 32%; }
+    .founder-copy { padding: 30px 26px; }
+    .company-intro { grid-template-columns: 1fr; gap: 16px; }
+    .about-values { grid-template-columns: 1fr; }
+    .about-value, .about-value + .about-value { padding: 20px 0; border-left: 0; }
+    .about-value + .about-value { border-top: 1px solid #3b3032; }
+    .about-value h3 { margin-top: 10px; }
+    .about-company { margin-bottom: 40px; }
+}
+
+.contact-page {
+    width: min(1120px, calc(100% - 48px));
+    margin: 0 auto;
+    padding: 66px 0 80px;
+}
+.contact-heading { max-width: 650px; margin: 0 0 34px; }
+.contact-heading h2 { margin: 0; font-size: clamp(2.8rem, 6vw, 4.4rem); letter-spacing: -.055em; line-height: 1; }
+.contact-heading > p:last-child { max-width: 560px; margin: 16px 0 0; color: #bdb7b8; font-size: 16px; line-height: 1.7; }
+.contact-layout { display: grid; grid-template-columns: minmax(260px, .78fr) 1.22fr; overflow: hidden; border: 1px solid #342a2c; border-radius: 12px; background: #141313; }
+.contact-details { padding: clamp(26px, 4vw, 44px); background: linear-gradient(145deg, #201719, #151213 78%); }
+.contact-details-label { margin: 0 0 10px; color: #d5a3ab; font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+.contact-details h3, .contact-form-panel h3 { margin: 0; font-size: clamp(1.45rem, 2.5vw, 1.9rem); letter-spacing: -.03em; }
+.contact-details-intro { margin: 12px 0 28px; color: #bcb4b5; font-size: 14px; line-height: 1.75; }
+.contact-detail-item { display: grid; grid-template-columns: 36px 1fr; align-items: start; gap: 12px; margin: 22px 0; }
+.contact-detail-icon { display: grid; place-items: center; width: 34px; height: 34px; border: 1px solid #65414a; border-radius: 50%; color: #e2aab4; font-size: 15px; }
+.contact-detail-item div > span { display: block; margin-bottom: 5px; color: #a99fa1; font-size: 11px; letter-spacing: .09em; text-transform: uppercase; }
+.contact-detail-item a, .contact-detail-item p { margin: 0; color: #f0e9ea; font-size: 14px; line-height: 1.65; text-decoration: none; }
+.contact-detail-item a:hover { color: #e2aab4; }
+.contact-hours { margin-top: 32px; padding-top: 20px; border-top: 1px solid #3c3032; }
+.contact-hours span { color: #d5a3ab; font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+.contact-hours p { margin: 7px 0 0; color: #aaa2a3; font-size: 12px; line-height: 1.6; }
+.contact-form-panel { padding: clamp(26px, 5vw, 54px); }
+.contact-form-intro { margin: 9px 0 26px; color: #aaa3a4; font-size: 13px; line-height: 1.6; }
+.contact-name-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.contact-field { display: grid; gap: 8px; margin-bottom: 18px; }
+.contact-field label { color: #e6dfe0; font-size: 13px; font-weight: 700; }
+.contact-field label span { color: #d98796; }
+.contact-field input, .contact-field select, .contact-field textarea { width: 100%; border: 1px solid #40383a; border-radius: 5px; outline: 0; background: #1b191a; color: #f4eeee; font: inherit; font-size: 14px; transition: border-color .2s ease, box-shadow .2s ease; }
+.contact-field input, .contact-field select { height: 44px; padding: 0 12px; }
+.contact-field textarea { min-height: 130px; padding: 12px; resize: vertical; line-height: 1.6; }
+.contact-field textarea::placeholder { color: #797273; }
+.contact-field input:focus, .contact-field select:focus, .contact-field textarea:focus { border-color: #a44b5d; box-shadow: 0 0 0 3px rgba(164, 75, 93, .15); }
+.contact-submit { display: inline-flex; align-items: center; justify-content: center; gap: 14px; min-height: 46px; padding: 0 20px; border: 0; border-radius: 5px; background: #8f293b; color: #fff; cursor: pointer; font-size: 14px; font-weight: 700; transition: background .2s ease, transform .2s ease; }
+.contact-submit:hover { transform: translateY(-1px); background: #a9384d; }
+.contact-submit:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+.contact-submit span { font-size: 18px; }
+.contact-form-note { margin: 12px 0 0; color: #8f8889; font-size: 11px; line-height: 1.6; }
+.contact-form-status { margin: 8px 0 0; color: #e2aab4; font-size: 12px; }
+@media (max-width: 760px) {
+    .contact-page { width: min(100% - 28px, 560px); padding: 42px 0 54px; }
+    .contact-layout { grid-template-columns: 1fr; }
+    .contact-details { order: 2; }
+    .contact-form-panel { order: 1; }
+}
+@media (max-width: 480px) {
+    .contact-name-fields { grid-template-columns: 1fr; gap: 0; }
+}
+
+
 .hero {
     position: relative;
     display: flex;
@@ -147,9 +299,7 @@ header nav a:focus-visible {
         line-height: 1.5;
     }
 }
-/* =========================
-   UPCOMING EVENT CARDS
-========================= */
+
 .upcoming-events {
     width: min(1120px, calc(100% - 40px));
     margin: 0 auto;
@@ -294,9 +444,7 @@ header nav a:focus-visible {
     .events-heading { align-items: start; }
     .all-events-link { margin-top: 18px; white-space: nowrap; }
 }
-/* =========================
-   CALL TO ACTION
-========================= */
+
 .cta {
     display: flex;
     align-items: center;
@@ -346,9 +494,7 @@ header nav a:focus-visible {
     text-decoration: none;
     transition: background-color 0.2s ease, transform 0.2s ease;
 }
-/* =========================
-   SITE FOOTER
-========================= */
+
 .site-footer {
     display: grid;
     grid-template-columns: 1.3fr 0.8fr 1fr;
