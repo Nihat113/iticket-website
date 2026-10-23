@@ -1,61 +1,96 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ITicket.az</title>
+    <meta name="description" content="Explore upcoming concerts, live music, and cultural events across Baku and Azerbaijan. Open an event to see full details and book tickets.">
+    <title>Upcoming Events | ITicket.az</title>
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-
-    
     <header>
         <nav aria-label="Main navigation">
-            <h1>🎟️ITicket.az</h1>
+            <h1>&#127903; ITicket.az</h1>
             <a href="index.html">Home</a>
-            <a href="events.html">Events</a>
+            <a href="events.html" aria-current="page">Events</a>
             <a href="about.html">About</a>
             <a href="contact.html">Contact</a>
             <a href="booking.html" aria-label="Shopping cart">&#128722; Cart</a>
         </nav>
     </header>
 
-    
     <main>
-        
+        <section aria-labelledby="events-title">
+            <p class="section-eyebrow">The 2026 programme</p>
+            <h2 id="events-title">Choose your next event</h2>
+            <p>Explore concerts and live experiences happening around Baku. Select any event to open its full details, then continue to booking when you are ready.</p>
+            <nav aria-label="Jump to an event">
+                <a class="hero-button" href="#live-music">Live Music Night</a>
+                <a class="hero-button" href="#acoustic-sessions">Acoustic Sessions</a>
+                <a class="hero-button" href="#electronic-beats">Electronic Beats</a>
+                <a class="hero-button" href="#symphony-evening">Symphony Evening</a>
+                <a class="hero-button" href="#jazz-blues">Jazz &amp; Blues</a>
+                <a class="hero-button" href="#rock-arena">Rock Arena</a>
+            </nav>
+        </section>
+
+        <section aria-label="Upcoming events">
+            <details id="live-music" class="event-card">
+                <summary>
+                    <span class="event-art event-art--live" role="img" aria-label="Crowd enjoying a live music performance"><time datetime="2026-11-15"><strong>15</strong><span>NOV</span></time></span>
+                    <span>
+                        <span class="section-eyebrow">Live music · Baku</span>
+                        <strong>Live Music Night</strong>
+                        <span>Baku Congress Center · 15 November 2026 · From 30 AZN</span>
+                        <span>Open event details <span aria-hidden="true">&#8594;</span></span>
+                    </span>
+                </summary>
+                <div>
+                    <p class="section-eyebrow">Event details</p><h3>A full night of live performances</h3>
+                    <p>Join music fans for an energetic evening of live performances at Baku Congress Center. Enjoy a lively atmosphere, a large stage, and a programme made for a memorable night out.</p>
+                    <dl>
+                        <div><dt class="section-eyebrow">Date and time</dt><dd><time datetime="2026-11-15T19:00">15 November 2026, 19:00</time></dd></div><div><dt class="section-eyebrow">Venue</dt><dd>Baku Congress Center, Baku</dd></div><div><dt class="section-eyebrow">Ticket price</dt><dd>From 30 AZN</dd></div><div><dt class="section-eyebrow">Category</dt><dd>Live music</dd></div>
+                    </dl>
+                    <a class="hero-button" href="booking.html">Book tickets <span aria-hidden="true">&#8594;</span></a>
+                </div>
+            </details>
+
+            <details id="acoustic-sessions" class="event-card">
+                <summary>
+                    <span class="event-art event-art--acoustic" role="img" aria-label="Acoustic performance in an intimate venue"><time datetime="2026-11-22"><strong>22</strong><span>NOV</span></time></span>
+                    <span><span class="section-eyebrow">Acoustic · Baku</span><strong>Acoustic Sessions</strong><span>YARAT Contemporary Art Space · 22 November 2026 · From 25 AZN</span><span>Open event details <span aria-hidden="true">&#8594;</span></span></span>
+                </summary>
+                <div><p class="section-eyebrow">Event details</p><h3>An intimate evening of acoustic music</h3><p>Settle in for stripped-back performances in a relaxed creative space. Acoustic Sessions brings performers and audience together for a closer, more personal live music experience.</p><dl><div><dt class="section-eyebrow">Date and time</dt><dd><time datetime="2026-11-22T20:00">22 November 2026, 20:00</time></dd></div><div><dt class="section-eyebrow">Venue</dt><dd>YARAT Contemporary Art Space, Baku</dd></div><div><dt class="section-eyebrow">Ticket price</dt><dd>From 25 AZN</dd></div><div><dt class="section-eyebrow">Category</dt><dd>Acoustic music</dd></div></dl><a class="hero-button" href="booking.html">Book tickets <span aria-hidden="true">&#8594;</span></a></div>
+            </details>
+
+            <details id="electronic-beats" class="event-card">
+                <summary><span class="event-art event-art--electronic" role="img" aria-label="Electronic music stage and lights"><time datetime="2026-11-28"><strong>28</strong><span>NOV</span></time></span><span><span class="section-eyebrow">Electronic · Baku</span><strong>Electronic Beats</strong><span>Sea Breeze Event Hall · 28 November 2026 · From 40 AZN</span><span>Open event details <span aria-hidden="true">&#8594;</span></span></span></summary>
+                <div><p class="section-eyebrow">Event details</p><h3>A high-energy night of electronic music</h3><p>Head to Sea Breeze for an evening of electronic sounds, vibrant lighting, and a dance floor built for a late night with friends.</p><dl><div><dt class="section-eyebrow">Date and time</dt><dd><time datetime="2026-11-28T21:00">28 November 2026, 21:00</time></dd></div><div><dt class="section-eyebrow">Venue</dt><dd>Sea Breeze Event Hall, Baku</dd></div><div><dt class="section-eyebrow">Ticket price</dt><dd>From 40 AZN</dd></div><div><dt class="section-eyebrow">Category</dt><dd>Electronic music</dd></div></dl><a class="hero-button" href="booking.html">Book tickets <span aria-hidden="true">&#8594;</span></a></div>
+            </details>
+
+            <details id="symphony-evening" class="event-card">
+                <summary><span class="event-art event-art--symphony" role="img" aria-label="Orchestra performing on stage"><time datetime="2026-12-05"><strong>05</strong><span>DEC</span></time></span><span><span class="section-eyebrow">Classical · Baku</span><strong>Symphony Evening</strong><span>Azerbaijan State Philharmonic · 5 December 2026 · From 35 AZN</span><span>Open event details <span aria-hidden="true">&#8594;</span></span></span></summary>
+                <div><p class="section-eyebrow">Event details</p><h3>An evening with the symphony</h3><p>Experience a live orchestral programme in the elegant setting of the Azerbaijan State Philharmonic. A thoughtful choice for classical music lovers and a special night out.</p><dl><div><dt class="section-eyebrow">Date and time</dt><dd><time datetime="2026-12-05T19:00">5 December 2026, 19:00</time></dd></div><div><dt class="section-eyebrow">Venue</dt><dd>Azerbaijan State Philharmonic, Baku</dd></div><div><dt class="section-eyebrow">Ticket price</dt><dd>From 35 AZN</dd></div><div><dt class="section-eyebrow">Category</dt><dd>Classical</dd></div></dl><a class="hero-button" href="booking.html">Book tickets <span aria-hidden="true">&#8594;</span></a></div>
+            </details>
+
+            <details id="jazz-blues" class="event-card">
+                <summary><span class="event-art event-art--jazz" role="img" aria-label="Jazz musicians performing under stage lights"><time datetime="2026-12-12"><strong>12</strong><span>DEC</span></time></span><span><span class="section-eyebrow">Jazz &amp; blues · Baku</span><strong>Jazz &amp; Blues Night</strong><span>International Mugham Center · 12 December 2026 · From 30 AZN</span><span>Open event details <span aria-hidden="true">&#8594;</span></span></span></summary>
+                <div><p class="section-eyebrow">Event details</p><h3>Jazz and blues by the Caspian</h3><p>Enjoy an evening of jazz and blues in the distinctive surroundings of the International Mugham Center, close to Baku's waterfront.</p><dl><div><dt class="section-eyebrow">Date and time</dt><dd><time datetime="2026-12-12T20:00">12 December 2026, 20:00</time></dd></div><div><dt class="section-eyebrow">Venue</dt><dd>International Mugham Center, Baku</dd></div><div><dt class="section-eyebrow">Ticket price</dt><dd>From 30 AZN</dd></div><div><dt class="section-eyebrow">Category</dt><dd>Jazz &amp; blues</dd></div></dl><a class="hero-button" href="booking.html">Book tickets <span aria-hidden="true">&#8594;</span></a></div>
+            </details>
+
+            <details id="rock-arena" class="event-card">
+                <summary><span class="event-art event-art--rock" role="img" aria-label="Rock concert performer on stage"><time datetime="2026-12-19"><strong>19</strong><span>DEC</span></time></span><span><span class="section-eyebrow">Rock · Baku</span><strong>Rock Arena</strong><span>Baku Sports Palace · 19 December 2026 · From 45 AZN</span><span>Open event details <span aria-hidden="true">&#8594;</span></span></span></summary>
+                <div><p class="section-eyebrow">Event details</p><h3>Big sound, big stage, and a night of rock</h3><p>Get ready for a full-scale rock show at Baku Sports Palace. Bring your friends for a night of powerful performances and songs made to sing along to.</p><dl><div><dt class="section-eyebrow">Date and time</dt><dd><time datetime="2026-12-19T19:30">19 December 2026, 19:30</time></dd></div><div><dt class="section-eyebrow">Venue</dt><dd>Baku Sports Palace, Baku</dd></div><div><dt class="section-eyebrow">Ticket price</dt><dd>From 45 AZN</dd></div><div><dt class="section-eyebrow">Category</dt><dd>Rock</dd></div></dl><a class="hero-button" href="booking.html">Book tickets <span aria-hidden="true">&#8594;</span></a></div>
+            </details>
+        </section>
     </main>
 
-    
-        <footer class="site-footer">
-        <div class="footer-brand">
-            <h2>&#127903;&#65039; ITicket.az</h2>
-            <p>Your gateway to the best events<br>in Azerbaijan.</p>
-            <div class="social-links">
-                <a href="https://www.facebook.com/iticket.az/" aria-label="Facebook">f</a>
-                <a href="https://www.instagram.com/iticket.az/" aria-label="Instagram">◎</a>
-                <a href="https://iticket.az/" aria-label="Official iTicket website">↗</a>
-            </div>
-        </div>
-        <div class="footer-links">
-            <h3>Quick Links</h3>
-            <nav aria-label="Footer navigation">
-                <a href="index.html">Home</a>
-                <a href="events.html">Events</a>
-                <a href="about.html">About</a>
-                <a href="contact.html">Contact</a>
-            </nav>
-        </div>
-        <div class="footer-contact">
-            <h3>Contact Us</h3>
-            <p><a href="mailto:info@iticket.az">info@iticket.az</a></p>
-            <p><a href="tel:+994124242424">+994 12 424-24-24</a></p>
-            <p>AF Mall, 14th floor, office 36</p>
-            <p>Samad Vurgun 34, Baku, Azerbaijan</p>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2026 ITicket.az. All rights reserved.</p>
-        </div>
+    <footer class="site-footer">
+        <div class="footer-brand"><h2>&#127903; ITicket.az</h2><p>Your gateway to the best events<br>in Azerbaijan.</p><div class="social-links"><a href="https://www.facebook.com/iticket.az/" aria-label="Facebook">f</a><a href="https://www.instagram.com/iticket.az/" aria-label="Instagram">&#9673;</a><a href="https://iticket.az/" aria-label="Official iTicket website">&#8599;</a></div></div>
+        <div class="footer-links"><h3>Quick Links</h3><nav aria-label="Footer navigation"><a href="index.html">Home</a><a href="events.html" aria-current="page">Events</a><a href="about.html">About</a><a href="contact.html">Contact</a></nav></div>
+        <div class="footer-contact"><h3>Contact Us</h3><p><a href="mailto:info@iticket.az">info@iticket.az</a></p><p><a href="tel:+994124242424">+994 12 424-24-24</a></p><p>AF Mall, 14th floor, office 36</p><p>Samad Vurgun 34, Baku, Azerbaijan</p></div>
+        <div class="footer-bottom"><p>&copy; 2026 ITicket.az. All rights reserved.</p></div>
     </footer>
-
 </body>
 </html>
+
