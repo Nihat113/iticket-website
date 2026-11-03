@@ -3,15 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ITicket.az</title>
+    <meta name="description" content="Choose your seats and review your event tickets with ITicket.az.">
+    <title>Book Tickets | ITicket.az</title>
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/booking.css">
+    <script src="../Js/booking.js" defer></script>
 </head>
 <body>
-
-    
     <header>
-        <nav>
-            <h1>🎟️ITicket.az</h1>
+        <nav aria-label="Main navigation">
+            <h1>&#127903; ITicket.az</h1>
             <a href="index.html">Home</a>
             <a href="events.html">Events</a>
             <a href="about.html">About</a>
@@ -20,20 +21,89 @@
         </nav>
     </header>
 
-    
-    <main>
-        
+    <main class="booking-page">
+        <section class="booking-event" aria-labelledby="event-title">
+            <p class="section-eyebrow">Your event</p>
+            <h2 id="event-title" data-event-title>Choose an event</h2>
+            <dl>
+                <div>
+                    <dt>Date and time</dt>
+                    <dd data-event-date>Event date and time</dd>
+                </div>
+                <div>
+                    <dt>Venue</dt>
+                    <dd data-event-venue>Event venue</dd>
+                </div>
+            </dl>
+        </section>
+
+        <section class="ticket-categories" aria-labelledby="categories-title">
+            <h2 id="categories-title">Ticket categories</h2>
+            <ul>
+                <li><span>VIP Orchestra</span><span>120 AZN</span></li>
+                <li><span>Premium Orchestra</span><span>85 AZN</span></li>
+                <li><span>Standard Seating</span><span>55 AZN</span></li>
+                <li><span>Balcony</span><span>30 AZN</span></li>
+            </ul>
+        </section>
+
+        <section class="venue-map-section" aria-labelledby="venue-map-title">
+            <div class="venue-map-heading">
+                <h2 id="venue-map-title">Choose your seats</h2>
+                <p>Select a seat on the map to see its details.</p>
+            </div>
+            <div class="venue-map-viewport" id="venue-map-viewport" aria-label="Interactive venue seating map">
+                <div class="venue-map" id="venue-map">
+                    <div class="venue-stage" role="img" aria-label="Stage at the front of the venue">Stage</div>
+                    <div class="seating-sections" id="seating-sections" aria-live="polite">
+                        <!-- Seating sections and seats will be generated here. -->
+                    </div>
+                </div>
+            </div>
+            <nav class="map-controls" aria-label="Venue map controls">
+                <button type="button" id="zoom-in" aria-label="Zoom in on venue map">Zoom In</button>
+                <button type="button" id="zoom-out" aria-label="Zoom out on venue map">Zoom Out</button>
+                <button type="button" id="move-up" aria-label="Move venue map up">Move Up</button>
+                <button type="button" id="move-down" aria-label="Move venue map down">Move Down</button>
+                <button type="button" id="move-left" aria-label="Move venue map left">Move Left</button>
+                <button type="button" id="move-right" aria-label="Move venue map right">Move Right</button>
+                <button type="button" id="reset-map">Reset / Center View</button>
+            </nav>
+        </section>
+
+        <section class="seat-information" aria-labelledby="seat-information-title" aria-live="polite">
+            <h2 id="seat-information-title">Seat information</h2>
+            <dl>
+                <div><dt>Seat</dt><dd id="selected-seat-number">None selected</dd></div>
+                <div><dt>Row</dt><dd id="selected-seat-row">—</dd></div>
+                <div><dt>Category</dt><dd id="selected-seat-category">—</dd></div>
+                <div><dt>Price</dt><dd id="selected-seat-price">—</dd></div>
+            </dl>
+            <button type="button" id="add-to-cart" disabled>Add to Cart</button>
+        </section>
+
+        <aside class="shopping-cart" aria-labelledby="cart-title">
+            <h2 id="cart-title">Your tickets <span id="cart-ticket-count">(0)</span></h2>
+            <p id="cart-empty-message">No tickets selected yet.</p>
+            <ul id="cart-items" aria-live="polite" aria-label="Selected tickets">
+                <!-- Selected ticket entries will be generated here. -->
+            </ul>
+            <div class="cart-total">
+                <span>Total</span>
+                <strong id="cart-total-price">0 AZN</strong>
+            </div>
+            <p id="booking-summary" aria-live="polite">Your booking summary will appear here.</p>
+        </aside>
     </main>
 
-    
-        <footer class="site-footer">
+    <footer class="site-footer">
         <div class="footer-brand">
-            <h2>&#127903;&#65039; ITicket.az</h2>
+            <h2>&#127903; ITicket.az</h2>
             <p>Your gateway to the best events<br>in Azerbaijan.</p>
             <div class="social-links">
                 <a href="https://www.facebook.com/iticket.az/" aria-label="Facebook">f</a>
-                <a href="https://www.instagram.com/iticket.az/" aria-label="Instagram">◎</a>
-                <a href="https://iticket.az/" aria-label="Official iTicket website">↗</a>
+                <a href="https://www.instagram.com/iticket.az/" aria-label="Instagram">&#9673;</a>
+                <a href="https://iticket.az/" aria-label="Official iTicket website">&#8599;</a>
             </div>
         </div>
         <div class="footer-links">
@@ -56,6 +126,5 @@
             <p>&copy; 2026 ITicket.az. All rights reserved.</p>
         </div>
     </footer>
-
 </body>
 </html>
