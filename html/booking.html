@@ -40,10 +40,10 @@
         <section class="ticket-categories" aria-labelledby="categories-title">
             <h2 id="categories-title">Ticket categories</h2>
             <ul>
-                <li><span>VIP Orchestra</span><span>120 AZN</span></li>
-                <li><span>Premium Orchestra</span><span>85 AZN</span></li>
-                <li><span>Standard Seating</span><span>55 AZN</span></li>
-                <li><span>Balcony</span><span>30 AZN</span></li>
+                <li data-category="vip-orchestra"><span>VIP Orchestra</span><span>120 AZN</span></li>
+                <li data-category="premium-orchestra"><span>Premium Orchestra</span><span>85 AZN</span></li>
+                <li data-category="standard-seating"><span>Standard Seating</span><span>55 AZN</span></li>
+                <li data-category="balcony"><span>Balcony</span><span>30 AZN</span></li>
             </ul>
         </section>
 
@@ -54,7 +54,11 @@
             </div>
             <div class="venue-map-viewport" id="venue-map-viewport" aria-label="Interactive venue seating map">
                 <div class="venue-map" id="venue-map">
-                    <div class="venue-stage" role="img" aria-label="Stage at the front of the venue">Stage</div>
+                    <div class="venue-stage" role="img" aria-label="Football pitch in the center of the stadium">Football pitch</div>
+                    <div class="concert-stage" role="img" aria-label="Concert stage in the center of the stadium">
+                        <span class="concert-stage-lights" aria-hidden="true"></span>
+                        <span class="concert-stage-deck" aria-hidden="true">LIVE STAGE</span>
+                    </div>
                     <div class="seating-sections" id="seating-sections" aria-live="polite">
                         <!-- Seating sections and seats will be generated here. -->
                     </div>
