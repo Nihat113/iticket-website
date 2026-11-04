@@ -1,0 +1,620 @@
+:root {
+    --booking-bg: #0D0D0D;
+    --booking-header: #1A1A1A;
+    --booking-card: #242424;
+    --booking-primary: #802D42;
+    --booking-text: #F5F5F5;
+    --booking-muted: #B3B3B3;
+    --booking-border: #3A3A3A;
+    --booking-seat-available: #356b53;
+    --booking-seat-inspected: #d5a23d;
+    --booking-seat-cart: #802D42;
+    --booking-seat-unavailable: #555;
+}
+
+body {
+    min-width: 320px;
+    overflow-x: hidden;
+    background: var(--booking-bg);
+    color: var(--booking-text);
+}
+
+body > header {
+    padding: 16px clamp(16px, 4vw, 40px);
+    border-bottom-color: var(--booking-border);
+    background: var(--booking-header);
+}
+
+body > header nav {
+    width: min(1280px, 100%);
+    margin: 0 auto;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+body > header nav h1 {
+    color: var(--booking-text);
+}
+
+body > header nav a {
+    min-height: 42px;
+    display: inline-flex;
+    align-items: center;
+}
+
+body > header nav a:hover {
+    background: var(--booking-primary);
+    box-shadow: 0 4px 15px rgb(128 45 66 / 30%);
+}
+
+.booking-page {
+    display: grid;
+    grid-template-columns: minmax(0, 1.65fr) minmax(280px, 0.85fr);
+    gap: 22px;
+    width: min(1280px, calc(100% - 40px));
+    margin: 0 auto;
+    padding: 34px 0 56px;
+}
+
+.booking-page h2 {
+    margin: 0;
+    color: var(--booking-text);
+    font-size: clamp(1.2rem, 2vw, 1.55rem);
+    line-height: 1.25;
+}
+
+.booking-page p {
+    color: var(--booking-muted);
+    line-height: 1.6;
+}
+
+.booking-event,
+.ticket-categories,
+.venue-map-section,
+.seat-information,
+.shopping-cart {
+    min-width: 0;
+    border: 1px solid var(--booking-border);
+    border-radius: 10px;
+    background: var(--booking-card);
+}
+
+.booking-event,
+.ticket-categories,
+.seat-information,
+.shopping-cart {
+    padding: clamp(18px, 2.4vw, 26px);
+}
+
+.booking-event,
+.ticket-categories,
+.venue-map-section {
+    grid-column: 1 / -1;
+}
+
+.booking-event .section-eyebrow {
+    margin: 0 0 8px;
+    color: #dca1ae;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.booking-event h2 {
+    margin-bottom: 18px;
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+}
+
+.booking-event dl {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 42px;
+    margin: 0;
+}
+
+.booking-event dl div,
+.seat-information dl div {
+    display: grid;
+    gap: 5px;
+}
+
+.booking-event dt,
+.seat-information dt {
+    color: var(--booking-muted);
+    font-size: 0.82rem;
+}
+
+.booking-event dd,
+.seat-information dd {
+    margin: 0;
+    color: var(--booking-text);
+    font-weight: 600;
+}
+
+.ticket-categories h2 {
+    margin-bottom: 16px;
+}
+
+.ticket-categories ul {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.ticket-categories li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    min-height: 54px;
+    padding: 12px 14px;
+    border: 1px solid var(--booking-border);
+    border-left: 3px solid var(--booking-primary);
+    border-radius: 7px;
+    background: #1c1c1c;
+    color: var(--booking-text);
+    font-size: 0.88rem;
+}
+
+.ticket-categories li span:last-child {
+    flex: 0 0 auto;
+    color: #e4b2bd;
+    font-weight: 700;
+}
+
+.venue-map-section {
+    padding: clamp(16px, 2.5vw, 26px);
+}
+
+.venue-map-heading {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 18px;
+}
+
+.venue-map-heading p {
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+.venue-map-viewport {
+    position: relative;
+    min-height: 380px;
+    max-height: min(72vh, 720px);
+    overflow: hidden;
+    overscroll-behavior: contain;
+    border: 1px solid var(--booking-border);
+    border-radius: 8px;
+    background: radial-gradient(ellipse at center, #292526 0%, #191718 72%);
+}
+
+.venue-map {
+    position: relative;
+    display: flex;
+    min-width: min(760px, 100%);
+    min-height: 380px;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+    padding: 28px clamp(16px, 4vw, 48px) 40px;
+    transform-origin: center center;
+    will-change: transform;
+    transition: transform 180ms ease-out;
+}
+
+.venue-stage {
+    display: grid;
+    place-items: center;
+    width: min(70%, 600px);
+    min-height: 55px;
+    border: 1px solid #a64a60;
+    border-radius: 50% 50% 10px 10px / 35% 35% 10px 10px;
+    background: linear-gradient(180deg, #87364a, #5e2535);
+    box-shadow: 0 10px 34px rgb(128 45 66 / 28%);
+    color: #fff;
+    font-size: 0.88rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+}
+
+.seating-sections {
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+    align-items: start;
+    justify-content: center;
+    gap: 18px;
+}
+
+.seating-section,
+.venue-section,
+[data-seating-section] {
+    min-width: 0;
+    padding: 14px;
+    border: 1px solid var(--booking-border);
+    border-radius: 9px;
+    background: rgb(13 13 13 / 46%);
+}
+
+.seating-section h3,
+.venue-section h3,
+[data-seating-section] h3 {
+    margin: 0 0 12px;
+    color: var(--booking-text);
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.seat-row,
+.venue-row,
+[data-seat-row] {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    margin: 7px 0;
+}
+
+.seat-row-label,
+.row-label {
+    min-width: 36px;
+    color: var(--booking-muted);
+    font-size: 0.7rem;
+    text-align: center;
+}
+
+.venue-seat,
+.seat-button,
+button[data-seat-id] {
+    display: inline-grid;
+    place-items: center;
+    width: 29px;
+    min-width: 29px;
+    height: 29px;
+    padding: 0;
+    border: 1px solid #4d8068;
+    border-radius: 7px 7px 4px 4px;
+    background: var(--booking-seat-available);
+    color: #fff;
+    cursor: pointer;
+    font: inherit;
+    font-size: 0.68rem;
+    line-height: 1;
+    transition: background-color 140ms ease, border-color 140ms ease, transform 140ms ease;
+}
+
+.venue-seat:hover,
+.seat-button:hover,
+button[data-seat-id]:hover {
+    transform: translateY(-2px);
+    border-color: #91c6a8;
+    background: #438366;
+}
+
+.venue-seat:focus-visible,
+.seat-button:focus-visible,
+button[data-seat-id]:focus-visible,
+.map-controls button:focus-visible,
+#add-to-cart:focus-visible,
+.cart-remove:focus-visible {
+    outline: 3px solid #f0c96d;
+    outline-offset: 3px;
+}
+
+.venue-seat.is-inspected,
+.seat-button.is-inspected,
+button[data-seat-id][data-state="inspected"],
+button[data-seat-id][aria-pressed="true"] {
+    border-color: #f1ce7e;
+    background: var(--booking-seat-inspected);
+    color: #17130a;
+}
+
+.venue-seat.is-in-cart,
+.seat-button.is-in-cart,
+button[data-seat-id][data-state="in-cart"] {
+    border-color: #c36b80;
+    background: var(--booking-seat-cart);
+    cursor: not-allowed;
+}
+
+.venue-seat.is-unavailable,
+.seat-button.is-unavailable,
+button[data-seat-id][data-state="unavailable"],
+button[data-seat-id]:disabled {
+    border-color: #626262;
+    background: var(--booking-seat-unavailable);
+    color: #b8b8b8;
+    cursor: not-allowed;
+    opacity: 0.62;
+}
+
+.map-controls {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 9px;
+    margin-top: 15px;
+}
+
+.map-controls button,
+#add-to-cart,
+.cart-remove {
+    min-height: 44px;
+    padding: 10px 15px;
+    border: 1px solid #6e3040;
+    border-radius: 6px;
+    background: var(--booking-primary);
+    color: #fff;
+    cursor: pointer;
+    font: inherit;
+    font-size: 0.88rem;
+    font-weight: 700;
+    transition: background-color 150ms ease, border-color 150ms ease;
+}
+
+.map-controls button:hover,
+#add-to-cart:not(:disabled):hover,
+.cart-remove:hover {
+    border-color: #a85066;
+    background: #963c54;
+}
+
+#add-to-cart:disabled {
+    border-color: #454545;
+    background: #454545;
+    color: #c1c1c1;
+    cursor: not-allowed;
+}
+
+.seat-information,
+.shopping-cart {
+    align-self: start;
+}
+
+.seat-information h2,
+.shopping-cart h2 {
+    margin-bottom: 18px;
+}
+
+.seat-information dl {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px 12px;
+    margin: 0 0 20px;
+}
+
+.seat-information #add-to-cart {
+    width: 100%;
+}
+
+.shopping-cart {
+    grid-column: 2;
+}
+
+.shopping-cart h2 span {
+    color: var(--booking-muted);
+    font-size: 0.9em;
+}
+
+#cart-empty-message,
+#booking-summary {
+    margin: 0 0 14px;
+    font-size: 0.88rem;
+}
+
+#cart-items {
+    display: grid;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+#cart-items:empty {
+    display: none;
+}
+
+.cart-item {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px 12px;
+    padding: 12px;
+    border: 1px solid var(--booking-border);
+    border-radius: 7px;
+    background: #1b1b1b;
+}
+
+.cart-item p,
+.cart-item span {
+    margin: 0;
+    color: var(--booking-muted);
+    font-size: 0.82rem;
+}
+
+.cart-remove {
+    min-height: 36px;
+    padding: 7px 10px;
+    font-size: 0.78rem;
+}
+
+.cart-total {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 16px 0;
+    padding-top: 14px;
+    border-top: 1px solid var(--booking-border);
+}
+
+.cart-total span {
+    color: var(--booking-muted);
+}
+
+.cart-total strong {
+    color: var(--booking-text);
+    font-size: 1.2rem;
+}
+
+.site-footer {
+    background: var(--booking-header);
+}
+
+.site-footer a:focus-visible {
+    outline: 2px solid #e4b2bd;
+    outline-offset: 3px;
+}
+
+@media (max-width: 900px) {
+    .booking-page {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        width: min(100% - 32px, 760px);
+        gap: 16px;
+    }
+
+    .ticket-categories ul {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .venue-map-viewport {
+        min-height: 340px;
+    }
+
+    .venue-map {
+        min-height: 340px;
+    }
+
+    .shopping-cart {
+        grid-column: 2;
+        grid-row: auto;
+    }
+}
+
+@media (max-width: 600px) {
+    body > header {
+        padding: 12px 14px;
+    }
+
+    body > header nav {
+        justify-content: center;
+        gap: 4px;
+    }
+
+    body > header nav h1 {
+        width: 100%;
+        margin: 0 0 5px;
+        text-align: center;
+        font-size: 24px;
+    }
+
+    body > header nav a {
+        padding: 8px 9px;
+        font-size: 0.84rem;
+    }
+
+    .booking-page {
+        grid-template-columns: minmax(0, 1fr);
+        width: calc(100% - 24px);
+        padding: 20px 0 36px;
+        gap: 13px;
+    }
+
+    .booking-event,
+    .ticket-categories,
+    .venue-map-section {
+        grid-column: 1;
+    }
+
+    .booking-event dl {
+        display: grid;
+        gap: 13px;
+    }
+
+    .ticket-categories ul {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .ticket-categories li {
+        min-height: 48px;
+    }
+
+    .venue-map-heading {
+        align-items: start;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .venue-map-viewport {
+        min-height: 300px;
+        max-height: 58vh;
+    }
+
+    .venue-map {
+        min-width: 650px;
+        min-height: 300px;
+        gap: 20px;
+        padding: 20px 16px 28px;
+    }
+
+    .venue-stage {
+        min-height: 46px;
+    }
+
+    .seating-sections {
+        gap: 10px;
+    }
+
+    .seating-section,
+    .venue-section,
+    [data-seating-section] {
+        padding: 9px;
+    }
+
+    .venue-seat,
+    .seat-button,
+    button[data-seat-id] {
+        width: 26px;
+        min-width: 26px;
+        height: 28px;
+    }
+
+    .map-controls {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .map-controls button {
+        padding: 9px 8px;
+        font-size: 0.82rem;
+    }
+
+    #reset-map {
+        grid-column: 1 / -1;
+    }
+
+    .shopping-cart {
+        grid-column: 1;
+        grid-row: auto;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .venue-map,
+    .venue-seat,
+    .seat-button,
+    button[data-seat-id],
+    .map-controls button,
+    #add-to-cart,
+    .cart-remove {
+        scroll-behavior: auto;
+        transition-duration: 0.01ms;
+    }
+}
