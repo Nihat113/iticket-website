@@ -77,6 +77,7 @@ function createSeatButton(seat) {
     button.dataset.price = String(seat.price);
     button.dataset.state = seat.status;
     button.textContent = String(seat.seatNumber);
+    button.setAttribute("aria-pressed", "false");
     button.setAttribute(
         "aria-label",
         `${seat.category}, row ${seat.row}, seat ${seat.seatNumber}, ${seat.price} AZN, ${statusLabel}`
@@ -151,6 +152,228 @@ function renderVenue(venue, container) {
     container.replaceChildren(fragment);
 }
 
+function isEligibleForInspection(seat, button) {
+    return Boolean(
+        seat &&
+        button &&
+        !button.disabled &&
+        seat.status === "available" &&
+        button.dataset.state !== "unavailable" &&
+        button.dataset.state !== "in-cart" &&
+        !button.classList.contains("is-in-cart")
+    );
+}
+
+function setSeatLabel(button, seat, stateLabel) {
+    button.setAttribute(
+        "aria-label",
+        `${seat.category}, row ${seat.row}, seat ${seat.seatNumber}, ${seat.price} AZN, ${stateLabel}`
+    );
+}
+
+function setupShoppingCart(venue, mapContainer) {
+    const cartItems = document.getElementById("cart-items");
+    const ticketCount = document.getElementById("cart-ticket-count");
+    const emptyMessage = document.getElementById("cart-empty-message");
+    const totalPrice = document.getElementById("cart-total-price");
+    const bookingSummary = document.getElementById("booking-summary");
+    const eventTitle = document.querySelector("[data-event-title]");
+    const requiredElements = [cartItems, ticketCount, emptyMessage, totalPrice, bookingSummary];
+
+    if (requiredElements.some((element) => !element)) {
+        return null;
+    }
+
+    const cart = new Map();
+    const seatById = new Map(venue.seats.map((seat) => [seat.id, seat]));
+    const buttonById = new Map(
+        Array.from(mapContainer.querySelectorAll("button[data-seat-id]"), (button) => [button.dataset.seatId, button])
+    );
+
+    function getEventName() {
+        return eventTitle?.textContent.trim() || "Selected event";
+    }
+
+    function createCartEntry(ticket) {
+        const item = document.createElement("li");
+        item.className = "cart-item";
+        item.dataset.seatId = ticket.seatId;
+
+        const event = document.createElement("p");
+        event.className = "cart-item-event";
+        event.textContent = ticket.eventName;
+
+        const seatDetails = document.createElement("p");
+        seatDetails.textContent = `Seat ${ticket.seatNumber} · Row ${ticket.row}`;
+
+        const category = document.createElement("p");
+        category.textContent = ticket.category;
+
+        const price = document.createElement("strong");
+        price.textContent = `${ticket.price} AZN`;
+
+        const removeButton = document.createElement("button");
+        removeButton.type = "button";
+        removeButton.className = "cart-remove";
+        removeButton.dataset.removeSeatId = ticket.seatId;
+        removeButton.setAttribute(
+            "aria-label",
+            `Remove ${ticket.category}, row ${ticket.row}, seat ${ticket.seatNumber} from cart`
+        );
+        removeButton.textContent = "Remove";
+
+        item.append(event, seatDetails, category, price, removeButton);
+        return item;
+    }
+
+    function renderCart() {
+        const tickets = Array.from(cart.values());
+        const total = tickets.reduce((sum, ticket) => sum + ticket.price, 0);
+        const fragment = document.createDocumentFragment();
+
+        tickets.forEach((ticket) => fragment.append(createCartEntry(ticket)));
+        cartItems.replaceChildren(fragment);
+        ticketCount.textContent = `(${tickets.length})`;
+        emptyMessage.hidden = tickets.length > 0;
+        totalPrice.textContent = `${total} AZN`;
+        bookingSummary.textContent = tickets.length
+            ? `${tickets.length} ${tickets.length === 1 ? "ticket" : "tickets"} selected. Total: ${total} AZN.`
+            : "Your booking summary will appear here.";
+    }
+
+    function addTicket(seat, button) {
+        if (
+            !seat ||
+            !button ||
+            cart.has(seat.id) ||
+            seat.status !== "available" ||
+            button.dataset.state !== "inspected" ||
+            !button.classList.contains("is-inspected")
+        ) {
+            return false;
+        }
+
+        cart.set(seat.id, {
+            seatId: seat.id,
+            eventName: getEventName(),
+            seatNumber: seat.seatNumber,
+            row: seat.row,
+            category: seat.category,
+            price: seat.price
+        });
+
+        seat.status = "in-cart";
+        button.classList.remove("is-inspected");
+        button.classList.add("is-in-cart");
+        button.dataset.state = "in-cart";
+        button.disabled = true;
+        button.setAttribute("aria-pressed", "false");
+        setSeatLabel(button, seat, "in cart");
+        renderCart();
+        return true;
+    }
+
+    function removeTicket(seatId) {
+        if (!cart.has(seatId)) {
+            return;
+        }
+
+        cart.delete(seatId);
+        const seat = seatById.get(seatId);
+        const button = buttonById.get(seatId);
+        if (seat && button) {
+            seat.status = "available";
+            button.classList.remove("is-in-cart", "is-inspected", "is-unavailable");
+            button.dataset.state = "available";
+            button.disabled = false;
+            button.setAttribute("aria-pressed", "false");
+            setSeatLabel(button, seat, "available");
+        }
+
+        renderCart();
+    }
+
+    cartItems.addEventListener("click", (event) => {
+        const target = event.target instanceof Element ? event.target : null;
+        const removeButton = target?.closest("button[data-remove-seat-id]");
+        if (removeButton && cartItems.contains(removeButton)) {
+            removeTicket(removeButton.dataset.removeSeatId);
+        }
+    });
+
+    renderCart();
+    return { addTicket, hasTicket: (seatId) => cart.has(seatId) };
+}
+
+function setupSeatInspection(venue, container, cart) {
+    const seatById = new Map(venue.seats.map((seat) => [seat.id, seat]));
+    const selectedSeatNumber = document.getElementById("selected-seat-number");
+    const selectedSeatRow = document.getElementById("selected-seat-row");
+    const selectedSeatCategory = document.getElementById("selected-seat-category");
+    const selectedSeatPrice = document.getElementById("selected-seat-price");
+    const addToCartButton = document.getElementById("add-to-cart");
+    let inspectedButton = null;
+
+    if (!selectedSeatNumber || !selectedSeatRow || !selectedSeatCategory || !selectedSeatPrice || !addToCartButton || !cart) {
+        return;
+    }
+
+    function clearInformation() {
+        selectedSeatNumber.textContent = "None selected";
+        selectedSeatRow.textContent = "—";
+        selectedSeatCategory.textContent = "—";
+        selectedSeatPrice.textContent = "—";
+        addToCartButton.disabled = true;
+    }
+
+    container.addEventListener("click", (event) => {
+        const target = event.target instanceof Element ? event.target : null;
+        const button = target?.closest("button[data-seat-id]");
+        if (!button || !container.contains(button)) {
+            return;
+        }
+
+        const seat = seatById.get(button.dataset.seatId);
+        if (cart.hasTicket(seat?.id) || !isEligibleForInspection(seat, button)) {
+            return;
+        }
+
+        if (inspectedButton && inspectedButton !== button) {
+            const previousSeat = seatById.get(inspectedButton.dataset.seatId);
+            inspectedButton.classList.remove("is-inspected");
+            inspectedButton.dataset.state = previousSeat.status;
+            inspectedButton.setAttribute("aria-pressed", "false");
+            setSeatLabel(inspectedButton, previousSeat, "available");
+        }
+
+        inspectedButton = button;
+        button.classList.add("is-inspected");
+        button.dataset.state = "inspected";
+        button.setAttribute("aria-pressed", "true");
+        setSeatLabel(button, seat, "selected for inspection");
+
+        selectedSeatNumber.textContent = String(seat.seatNumber);
+        selectedSeatRow.textContent = seat.row;
+        selectedSeatCategory.textContent = seat.category;
+        selectedSeatPrice.textContent = `${seat.price} AZN`;
+        addToCartButton.disabled = false;
+    });
+
+    addToCartButton.addEventListener("click", () => {
+        if (!inspectedButton) {
+            return;
+        }
+
+        const seat = seatById.get(inspectedButton.dataset.seatId);
+        if (!isEligibleForInspection(seat, inspectedButton) || !cart.addTicket(seat, inspectedButton)) {
+            return;
+        }
+
+        inspectedButton = null;
+        clearInformation();
+    });
+}
+
 function initializeVenue() {
     const seatingContainer = document.getElementById("seating-sections");
     if (!seatingContainer) {
@@ -159,6 +382,8 @@ function initializeVenue() {
 
     const venue = createVenueData();
     renderVenue(venue, seatingContainer);
+    const cart = setupShoppingCart(venue, seatingContainer);
+    setupSeatInspection(venue, seatingContainer, cart);
 
     // Keep the data available for later booking interactions without adding behavior here.
     window.ITicketVenue = venue;
