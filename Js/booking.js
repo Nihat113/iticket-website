@@ -474,6 +474,136 @@ function setupSeatInspection(venue, container, cart) {
     });
 }
 
+function setupVenueMapNavigation() {
+    const viewport = document.getElementById("venue-map-viewport");
+    const map = document.getElementById("venue-map");
+    if (!viewport || !map) {
+        return;
+    }
+
+    const MIN_SCALE = 0.8;
+    const MAX_SCALE = 2.6;
+    const ZOOM_FACTOR = 1.18;
+    const PAN_STEP_RATIO = 0.22;
+    let scale = 1;
+    let translateX = 0;
+    let translateY = 0;
+    let dragState = null;
+
+    function limitPan() {
+        const maxX = Math.max(0, (map.offsetWidth * scale - viewport.clientWidth) / 2);
+        const maxY = Math.max(0, (map.offsetHeight * scale - viewport.clientHeight) / 2);
+        translateX = Math.max(-maxX, Math.min(maxX, translateX));
+        translateY = Math.max(-maxY, Math.min(maxY, translateY));
+    }
+
+    function applyTransform() {
+        limitPan();
+        map.style.transform = `translate3d(${translateX}px, ${translateY}px, 0) scale(${scale})`;
+    }
+
+    function zoomAt(nextScale, pointX, pointY) {
+        const boundedScale = Math.max(MIN_SCALE, Math.min(MAX_SCALE, nextScale));
+        if (boundedScale === scale) {
+            return;
+        }
+
+        const ratio = boundedScale / scale;
+        const relativeX = pointX - viewport.clientWidth / 2;
+        const relativeY = pointY - viewport.clientHeight / 2;
+        translateX = relativeX + (translateX - relativeX) * ratio;
+        translateY = relativeY + (translateY - relativeY) * ratio;
+        scale = boundedScale;
+        applyTransform();
+    }
+
+    function zoomBy(factor) {
+        zoomAt(scale * factor, viewport.clientWidth / 2, viewport.clientHeight / 2);
+    }
+
+    function panBy(x, y) {
+        translateX += x;
+        translateY += y;
+        applyTransform();
+    }
+
+    function getPanStep() {
+        return Math.max(48, viewport.clientWidth * PAN_STEP_RATIO);
+    }
+
+    function resetView() {
+        scale = 1;
+        translateX = 0;
+        translateY = 0;
+        applyTransform();
+    }
+
+    const controls = [
+        ["zoom-in", () => zoomBy(ZOOM_FACTOR)],
+        ["zoom-out", () => zoomBy(1 / ZOOM_FACTOR)],
+        ["move-up", () => panBy(0, getPanStep())],
+        ["move-down", () => panBy(0, -getPanStep())],
+        ["move-left", () => panBy(getPanStep(), 0)],
+        ["move-right", () => panBy(-getPanStep(), 0)],
+        ["reset-map", resetView]
+    ];
+
+    controls.forEach(([id, action]) => {
+        document.getElementById(id)?.addEventListener("click", action);
+    });
+
+    viewport.addEventListener("wheel", (event) => {
+        event.preventDefault();
+        const bounds = viewport.getBoundingClientRect();
+        const factor = Math.exp(-event.deltaY * 0.0012);
+        zoomAt(scale * factor, event.clientX - bounds.left, event.clientY - bounds.top);
+    }, { passive: false });
+
+    viewport.addEventListener("pointerdown", (event) => {
+        const target = event.target instanceof Element ? event.target : null;
+        if (event.pointerType !== "mouse" || event.button !== 0 || !target || target.closest("button")) {
+            return;
+        }
+
+        dragState = {
+            pointerId: event.pointerId,
+            startX: event.clientX,
+            startY: event.clientY,
+            originX: translateX,
+            originY: translateY
+        };
+        viewport.classList.add("is-panning");
+        viewport.setPointerCapture(event.pointerId);
+    });
+
+    viewport.addEventListener("pointermove", (event) => {
+        if (!dragState || event.pointerId !== dragState.pointerId) {
+            return;
+        }
+
+        translateX = dragState.originX + event.clientX - dragState.startX;
+        translateY = dragState.originY + event.clientY - dragState.startY;
+        applyTransform();
+    });
+
+    function finishDrag(event) {
+        if (!dragState || (event && event.pointerId !== dragState.pointerId)) {
+            return;
+        }
+
+        if (viewport.hasPointerCapture(dragState.pointerId)) {
+            viewport.releasePointerCapture(dragState.pointerId);
+        }
+        dragState = null;
+        viewport.classList.remove("is-panning");
+    }
+
+    viewport.addEventListener("pointerup", finishDrag);
+    viewport.addEventListener("pointercancel", finishDrag);
+    window.addEventListener("resize", applyTransform);
+    applyTransform();
+}
+
 function initializeVenue() {
     const seatingContainer = document.getElementById("seating-sections");
     if (!seatingContainer) {
@@ -485,6 +615,7 @@ function initializeVenue() {
     renderVenue(venue, seatingContainer);
     const cart = setupShoppingCart(venue, seatingContainer, restoredTickets);
     setupSeatInspection(venue, seatingContainer, cart);
+    setupVenueMapNavigation();
 
     // Keep the data available for later booking interactions without adding behavior here.
     window.ITicketVenue = venue;
