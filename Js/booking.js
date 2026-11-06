@@ -7,6 +7,9 @@ const ticketCategories = {
     balcony: { name: "Balcony", price: 30 }
 };
 
+const CART_STORAGE_KEY = "iticketBookingCart";
+const CART_STORAGE_VERSION = 1;
+
 /**
  * Build the venue model with stable IDs so each seat can be found reliably.
  * A few seats are marked unavailable to demonstrate that seat state.
@@ -64,11 +67,12 @@ function createVenueData() {
 function createSeatButton(seat) {
     const button = document.createElement("button");
     const unavailable = seat.status === "unavailable";
-    const statusLabel = unavailable ? "unavailable" : "available";
+    const inCart = seat.status === "in-cart";
+    const statusLabel = unavailable ? "unavailable" : inCart ? "in cart" : "available";
 
     button.type = "button";
     button.id = seat.id;
-    button.className = `venue-seat stadium-seat stadium-seat--${seat.sectionId}${unavailable ? " is-unavailable" : ""}`;
+    button.className = `venue-seat stadium-seat stadium-seat--${seat.sectionId}${unavailable ? " is-unavailable" : ""}${inCart ? " is-in-cart" : ""}`;
     button.dataset.seatId = seat.id;
     button.dataset.sectionId = seat.sectionId;
     button.dataset.row = seat.row;
@@ -83,7 +87,7 @@ function createSeatButton(seat) {
         `${seat.category}, row ${seat.row}, seat ${seat.seatNumber}, ${seat.price} AZN, ${statusLabel}`
     );
 
-    if (unavailable) {
+    if (unavailable || inCart) {
         button.disabled = true;
     }
 
@@ -171,7 +175,101 @@ function setSeatLabel(button, seat, stateLabel) {
     );
 }
 
-function setupShoppingCart(venue, mapContainer) {
+function removeSavedCart() {
+    try {
+        window.localStorage.removeItem(CART_STORAGE_KEY);
+    } catch (error) {
+        // Storage can be disabled by browser privacy settings; the page still works in memory.
+    }
+}
+
+function saveCartToStorage(cart) {
+    try {
+        const payload = {
+            version: CART_STORAGE_VERSION,
+            tickets: Array.from(cart.values())
+        };
+        window.localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(payload));
+    } catch (error) {
+        // Storage quota or browser privacy restrictions should not interrupt cart use.
+    }
+}
+
+function loadSavedCart(venue) {
+    let serialized;
+    try {
+        serialized = window.localStorage.getItem(CART_STORAGE_KEY);
+    } catch (error) {
+        return [];
+    }
+
+    if (serialized === null) {
+        return [];
+    }
+
+    let savedData;
+    try {
+        savedData = JSON.parse(serialized);
+    } catch (error) {
+        removeSavedCart();
+        return [];
+    }
+
+    if (
+        !savedData ||
+        typeof savedData !== "object" ||
+        savedData.version !== CART_STORAGE_VERSION ||
+        !Array.isArray(savedData.tickets)
+    ) {
+        removeSavedCart();
+        return [];
+    }
+
+    const seatById = new Map(venue.seats.map((seat) => [seat.id, seat]));
+    const seenSeatIds = new Set();
+    const restoredTickets = [];
+
+    savedData.tickets.forEach((savedTicket) => {
+        if (!savedTicket || typeof savedTicket !== "object" || Array.isArray(savedTicket)) {
+            return;
+        }
+
+        const seat = seatById.get(savedTicket.seatId);
+        const eventName = typeof savedTicket.eventName === "string" ? savedTicket.eventName.trim() : "";
+        const matchesCurrentSeat = Boolean(
+            seat &&
+            seat.status === "available" &&
+            savedTicket.seatNumber === seat.seatNumber &&
+            savedTicket.row === seat.row &&
+            savedTicket.category === seat.category &&
+            savedTicket.price === seat.price
+        );
+
+        if (!matchesCurrentSeat || !eventName || seenSeatIds.has(seat.id)) {
+            return;
+        }
+
+        seenSeatIds.add(seat.id);
+        const ticket = {
+            seatId: seat.id,
+            eventName,
+            seatNumber: seat.seatNumber,
+            row: seat.row,
+            category: seat.category,
+            price: seat.price
+        };
+        seat.status = "in-cart";
+        restoredTickets.push(ticket);
+    });
+
+    if (restoredTickets.length !== savedData.tickets.length) {
+        saveCartToStorage(new Map(restoredTickets.map((ticket) => [ticket.seatId, ticket])));
+    }
+
+    return restoredTickets;
+}
+
+function setupShoppingCart(venue, mapContainer, restoredTickets) {
     const cartItems = document.getElementById("cart-items");
     const ticketCount = document.getElementById("cart-ticket-count");
     const emptyMessage = document.getElementById("cart-empty-message");
@@ -184,7 +282,7 @@ function setupShoppingCart(venue, mapContainer) {
         return null;
     }
 
-    const cart = new Map();
+    const cart = new Map(restoredTickets.map((ticket) => [ticket.seatId, ticket]));
     const seatById = new Map(venue.seats.map((seat) => [seat.id, seat]));
     const buttonById = new Map(
         Array.from(mapContainer.querySelectorAll("button[data-seat-id]"), (button) => [button.dataset.seatId, button])
@@ -269,6 +367,7 @@ function setupShoppingCart(venue, mapContainer) {
         button.disabled = true;
         button.setAttribute("aria-pressed", "false");
         setSeatLabel(button, seat, "in cart");
+        saveCartToStorage(cart);
         renderCart();
         return true;
     }
@@ -290,6 +389,7 @@ function setupShoppingCart(venue, mapContainer) {
             setSeatLabel(button, seat, "available");
         }
 
+        saveCartToStorage(cart);
         renderCart();
     }
 
@@ -381,8 +481,9 @@ function initializeVenue() {
     }
 
     const venue = createVenueData();
+    const restoredTickets = loadSavedCart(venue);
     renderVenue(venue, seatingContainer);
-    const cart = setupShoppingCart(venue, seatingContainer);
+    const cart = setupShoppingCart(venue, seatingContainer, restoredTickets);
     setupSeatInspection(venue, seatingContainer, cart);
 
     // Keep the data available for later booking interactions without adding behavior here.
