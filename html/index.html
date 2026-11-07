@@ -8,6 +8,8 @@
     
     <title>ITicket.az | Home</title>
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/home-cart.css">
+    <script src="../Js/home-cart.js" defer></script>
 </head>
 <body>
 
@@ -19,7 +21,7 @@
             <a href="events.html">Events</a>
             <a href="about.html">About</a>
             <a href="contact.html">Contact</a>
-            <a href="booking.html" aria-label="Shopping cart">&#128722; Cart</a>
+            <a href="#home-cart" aria-label="Shopping cart">&#128722; Cart</a>
         </nav>
     </header>
 
@@ -107,6 +109,22 @@
                 <h2 id="cta-heading">Discover More Events</h2>
                 <p>Explore all upcoming concerts, shows, and special events.</p>
                 <a class="cta-button" href="events.html">View All Events <span aria-hidden="true">&#8594;</span></a>
+            </div>
+        </section>
+
+        <section class="home-cart" id="home-cart" aria-labelledby="home-cart-title">
+            <div class="home-cart-heading">
+                <div>
+                    <p class="section-eyebrow">Your selection</p>
+                    <h2 id="home-cart-title">Shopping Cart <span id="home-cart-ticket-count">(0)</span></h2>
+                </div>
+                <p id="home-cart-summary" aria-live="polite">Your selected tickets will appear here.</p>
+            </div>
+            <p id="home-cart-empty">Your cart is empty. Choose an event to select seats.</p>
+            <ul id="home-cart-items" aria-live="polite" aria-label="Tickets in your cart"></ul>
+            <div class="home-cart-total">
+                <span>Total</span>
+                <strong id="home-cart-total-price">0 AZN</strong>
             </div>
         </section>
 

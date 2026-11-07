@@ -448,7 +448,10 @@ function setupShoppingCart(venue, mapContainer, restoredTickets, event, storageK
 
         cart.set(seat.id, {
             seatId: seat.id,
+            eventId: event.id,
             eventName: getEventName(),
+            eventDate: event.date,
+            eventVenue: event.venue,
             seatNumber: seat.seatNumber,
             row: seat.row,
             category: seat.category,
