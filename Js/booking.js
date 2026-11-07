@@ -9,6 +9,102 @@ const ticketCategories = {
 
 const CART_STORAGE_KEY = "iticketBookingCart";
 const CART_STORAGE_VERSION = 1;
+const LAST_BOOKING_EVENT_KEY = "iticketLastBookingEvent";
+const BOOKING_EVENTS = {
+    "live-music": {
+        id: "live-music",
+        title: "Live Music Night",
+        date: "15 November 2026, 19:00",
+        dateTime: "2026-11-15T19:00",
+        venue: "Baku Congress Center, Baku"
+    },
+    "acoustic-sessions": {
+        id: "acoustic-sessions",
+        title: "Acoustic Sessions",
+        date: "22 November 2026, 20:00",
+        dateTime: "2026-11-22T20:00",
+        venue: "YARAT Contemporary Art Space, Baku"
+    },
+    "electronic-beats": {
+        id: "electronic-beats",
+        title: "Electronic Beats",
+        date: "28 November 2026, 21:00",
+        dateTime: "2026-11-28T21:00",
+        venue: "Sea Breeze Event Hall, Baku"
+    },
+    "symphony-evening": {
+        id: "symphony-evening",
+        title: "Symphony Evening",
+        date: "5 December 2026, 19:00",
+        dateTime: "2026-12-05T19:00",
+        venue: "Azerbaijan State Philharmonic, Baku"
+    },
+    "jazz-blues": {
+        id: "jazz-blues",
+        title: "Jazz & Blues Night",
+        date: "12 December 2026, 20:00",
+        dateTime: "2026-12-12T20:00",
+        venue: "International Mugham Center, Baku"
+    },
+    "rock-arena": {
+        id: "rock-arena",
+        title: "Rock Arena",
+        date: "19 December 2026, 19:30",
+        dateTime: "2026-12-19T19:30",
+        venue: "Baku Sports Palace, Baku"
+    }
+};
+
+function getCurrentBookingEvent() {
+    let requestedEventId = new URLSearchParams(window.location.search).get("event");
+
+    if (!BOOKING_EVENTS[requestedEventId]) {
+        try {
+            requestedEventId = window.localStorage.getItem(LAST_BOOKING_EVENT_KEY);
+        } catch (error) {
+            requestedEventId = null;
+        }
+    }
+
+    const event = BOOKING_EVENTS[requestedEventId] || {
+        id: "default",
+        title: "Choose an event",
+        date: "Event date and time",
+        dateTime: "",
+        venue: "Event venue"
+    };
+
+    if (event.id !== "default") {
+        try {
+            window.localStorage.setItem(LAST_BOOKING_EVENT_KEY, event.id);
+        } catch (error) {
+            // The booking page remains usable if browser storage is unavailable.
+        }
+    }
+
+    return event;
+}
+
+function getCartStorageKey(eventId) {
+    return eventId === "default" ? CART_STORAGE_KEY : `${CART_STORAGE_KEY}:${eventId}`;
+}
+
+function populateBookingEvent(event) {
+    const title = document.querySelector("[data-event-title]");
+    const date = document.querySelector("[data-event-date]");
+    const venue = document.querySelector("[data-event-venue]");
+
+    if (title) title.textContent = event.title;
+    if (date) {
+        date.textContent = event.date;
+        if (event.dateTime) {
+            date.setAttribute("datetime", event.dateTime);
+        } else {
+            date.removeAttribute("datetime");
+        }
+    }
+    if (venue) venue.textContent = event.venue;
+}
 
 /**
  * Build the venue model with stable IDs so each seat can be found reliably.
@@ -175,30 +271,30 @@ function setSeatLabel(button, seat, stateLabel) {
     );
 }
 
-function removeSavedCart() {
+function removeSavedCart(storageKey) {
     try {
-        window.localStorage.removeItem(CART_STORAGE_KEY);
+        window.localStorage.removeItem(storageKey);
     } catch (error) {
         // Storage can be disabled by browser privacy settings; the page still works in memory.
     }
 }
 
-function saveCartToStorage(cart) {
+function saveCartToStorage(cart, storageKey) {
     try {
         const payload = {
             version: CART_STORAGE_VERSION,
             tickets: Array.from(cart.values())
         };
-        window.localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(payload));
+        window.localStorage.setItem(storageKey, JSON.stringify(payload));
     } catch (error) {
         // Storage quota or browser privacy restrictions should not interrupt cart use.
     }
 }
 
-function loadSavedCart(venue) {
+function loadSavedCart(venue, storageKey) {
     let serialized;
     try {
-        serialized = window.localStorage.getItem(CART_STORAGE_KEY);
+        serialized = window.localStorage.getItem(storageKey);
     } catch (error) {
         return [];
     }
@@ -211,7 +307,7 @@ function loadSavedCart(venue) {
     try {
         savedData = JSON.parse(serialized);
     } catch (error) {
-        removeSavedCart();
+        removeSavedCart(storageKey);
         return [];
     }
 
@@ -221,7 +317,7 @@ function loadSavedCart(venue) {
         savedData.version !== CART_STORAGE_VERSION ||
         !Array.isArray(savedData.tickets)
     ) {
-        removeSavedCart();
+        removeSavedCart(storageKey);
         return [];
     }
 
@@ -263,19 +359,18 @@ function loadSavedCart(venue) {
     });
 
     if (restoredTickets.length !== savedData.tickets.length) {
-        saveCartToStorage(new Map(restoredTickets.map((ticket) => [ticket.seatId, ticket])));
+        saveCartToStorage(new Map(restoredTickets.map((ticket) => [ticket.seatId, ticket])), storageKey);
     }
 
     return restoredTickets;
 }
 
-function setupShoppingCart(venue, mapContainer, restoredTickets) {
+function setupShoppingCart(venue, mapContainer, restoredTickets, event, storageKey) {
     const cartItems = document.getElementById("cart-items");
     const ticketCount = document.getElementById("cart-ticket-count");
     const emptyMessage = document.getElementById("cart-empty-message");
     const totalPrice = document.getElementById("cart-total-price");
     const bookingSummary = document.getElementById("booking-summary");
-    const eventTitle = document.querySelector("[data-event-title]");
     const requiredElements = [cartItems, ticketCount, emptyMessage, totalPrice, bookingSummary];
 
     if (requiredElements.some((element) => !element)) {
@@ -289,7 +384,7 @@ function setupShoppingCart(venue, mapContainer, restoredTickets) {
     );
 
     function getEventName() {
-        return eventTitle?.textContent.trim() || "Selected event";
+        return event.title;
     }
 
     function createCartEntry(ticket) {
@@ -367,7 +462,7 @@ function setupShoppingCart(venue, mapContainer, restoredTickets) {
         button.disabled = true;
         button.setAttribute("aria-pressed", "false");
         setSeatLabel(button, seat, "in cart");
-        saveCartToStorage(cart);
+        saveCartToStorage(cart, storageKey);
         renderCart();
         return true;
     }
@@ -389,7 +484,7 @@ function setupShoppingCart(venue, mapContainer, restoredTickets) {
             setSeatLabel(button, seat, "available");
         }
 
-        saveCartToStorage(cart);
+        saveCartToStorage(cart, storageKey);
         renderCart();
     }
 
@@ -610,10 +705,13 @@ function initializeVenue() {
         return;
     }
 
+    const event = getCurrentBookingEvent();
+    populateBookingEvent(event);
+    const storageKey = getCartStorageKey(event.id);
     const venue = createVenueData();
-    const restoredTickets = loadSavedCart(venue);
+    const restoredTickets = loadSavedCart(venue, storageKey);
     renderVenue(venue, seatingContainer);
-    const cart = setupShoppingCart(venue, seatingContainer, restoredTickets);
+    const cart = setupShoppingCart(venue, seatingContainer, restoredTickets, event, storageKey);
     setupSeatInspection(venue, seatingContainer, cart);
     setupVenueMapNavigation();
 
