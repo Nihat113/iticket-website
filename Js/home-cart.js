@@ -64,7 +64,6 @@
                 });
             }
         } catch (error) {
-            // Storage may be unavailable or contain invalid JSON; show the tickets that could be read.
         }
 
         return tickets;
@@ -138,7 +137,6 @@
                 localStorage.setItem(button.dataset.storageKey, JSON.stringify(saved));
             }
         } catch (error) {
-            // Keep the homepage usable if browser storage is unavailable.
         }
 
         renderCart();

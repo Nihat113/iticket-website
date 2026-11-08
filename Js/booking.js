@@ -78,7 +78,6 @@ function getCurrentBookingEvent() {
         try {
             window.localStorage.setItem(LAST_BOOKING_EVENT_KEY, event.id);
         } catch (error) {
-            // The booking page remains usable if browser storage is unavailable.
         }
     }
 
@@ -106,10 +105,6 @@ function populateBookingEvent(event) {
     if (venue) venue.textContent = event.venue;
 }
 
-/**
- * Build the venue model with stable IDs so each seat can be found reliably.
- * A few seats are marked unavailable to demonstrate that seat state.
- */
 function createVenueData() {
     const sectionDefinitions = [
         { id: "vip-left", name: "VIP Orchestra — Left", categoryKey: "vipOrchestra", rowCount: 2, seatsPerRow: 9 },
@@ -159,7 +154,6 @@ function createVenueData() {
     return { categories: ticketCategories, sections, seats };
 }
 
-/** Create one accessible seat button from a seat record. */
 function createSeatButton(seat) {
     const button = document.createElement("button");
     const unavailable = seat.status === "unavailable";
@@ -190,7 +184,6 @@ function createSeatButton(seat) {
     return button;
 }
 
-/** Render all venue sections, rows, and seats into the existing map area. */
 function getSeatPosition(section, rowIndex, seatIndex, seatsInRow) {
     const arcs = {
         "vip-left": [145, 215],
@@ -275,7 +268,6 @@ function removeSavedCart(storageKey) {
     try {
         window.localStorage.removeItem(storageKey);
     } catch (error) {
-        // Storage can be disabled by browser privacy settings; the page still works in memory.
     }
 }
 
@@ -287,7 +279,6 @@ function saveCartToStorage(cart, storageKey) {
         };
         window.localStorage.setItem(storageKey, JSON.stringify(payload));
     } catch (error) {
-        // Storage quota or browser privacy restrictions should not interrupt cart use.
     }
 }
 
@@ -718,7 +709,6 @@ function initializeVenue() {
     setupSeatInspection(venue, seatingContainer, cart);
     setupVenueMapNavigation();
 
-    // Keep the data available for later booking interactions without adding behavior here.
     window.ITicketVenue = venue;
 }
 
